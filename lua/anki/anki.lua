@@ -1,6 +1,10 @@
 local curl = require('plenary.curl')
 
 local function create_note(deckName, modelName, fields, tags)
+    print(deckName)
+    print(modelName)
+    print(fields)
+    print(tags)
     curl.post("http://localhost:8765",
         {
             headers = {
