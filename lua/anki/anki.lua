@@ -1,7 +1,8 @@
 local curl = require('plenary.curl')
+local config = require('anki.config')
 
 local function create_note(deckName, modelName, fields, tags)
-    curl.post("http://localhost:8765",
+    curl.post(config.options.anki_connect.url,
         {
             headers = {
                 content_type = "application/json"

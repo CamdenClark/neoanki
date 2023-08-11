@@ -3,7 +3,8 @@ local M = {}
 local defaults = {
     deckName = "Default",
     modelName = "Cloze",
-    tags = {}
+    tags = {},
+    anki_connect = { url = "http://localhost:8765", token = nil },
 }
 
 M.options = {}
