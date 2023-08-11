@@ -37,13 +37,13 @@ local function quick_create_basic()
     local visual_selection = get_visual_selection()
     local parts = {}
     for part in visual_selection:gmatch("([^===]+)") do
-        table.insert(parts, part:match("^%s*(.-)%s*$")) -- trim the text
+        table.insert(parts, part:match("^%s*(.-)%s*$"))
     end
     local front = parts[1] or ''
     local back = parts[2] or ''
 
     if back == '' then
-      vim.fn.input('Enter the back text:')
+      back = vim.fn.input('Enter the back text: ')
     end
     local fields = { Front = front, Back = back }
 
