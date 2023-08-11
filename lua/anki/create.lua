@@ -33,20 +33,42 @@ local function quick_create_cloze()
         config.options.tags)
 end
 
+local function quick_create_basic()
+    local visual_selection = get_visual_selection()
+    local parts = {}
+    for part in visual_selection:gmatch("([^===]+)") do
+        table.insert(parts, part:match("^%s*(.-)%s*$")) -- trim the text
+    end
+    local front = parts[1] or ''
+    local back = parts[2] or ''
+
+    if back == '' then
+      vim.fn.input('Enter the back text:')
+    end
+    local fields = { Front = front, Back = back }
+
+    anki.create_note(
+        config.options.deckName,
+        "Basic",
+        fields,
+        config.options.tags)
+end
+
 local function wrap_cloze(number)
-  if not (number) then
-    number = "1"
-  end
-  local save_reg = vim.fn.getreg('"')
-  local save_regtype = vim.fn.getregtype('"')
-  vim.cmd('normal! gvy')
-  local selection = vim.fn.getreg('"')
-  vim.fn.setreg('"', '{{c' .. number .. '::' .. selection .. '}}')
-  vim.cmd('normal! gvp')
-  vim.fn.setreg('"', save_reg, save_regtype)
+    if not (number) then
+        number = "1"
+    end
+    local save_reg = vim.fn.getreg('"')
+    local save_regtype = vim.fn.getregtype('"')
+    vim.cmd('normal! gvy')
+    local selection = vim.fn.getreg('"')
+    vim.fn.setreg('"', '{{c' .. number .. '::' .. selection .. '}}')
+    vim.cmd('normal! gvp')
+    vim.fn.setreg('"', save_reg, save_regtype)
 end
 
 return {
     quick_create_cloze = quick_create_cloze,
+    quick_create_basic = quick_create_basic,
     wrap_cloze = wrap_cloze
 }
