@@ -1,138 +1,81 @@
-# flyboy.nvim
+# neoanki
 
-Flyboy is a plugin for lightweight interaction with ChatGPT.
+Neoanki is a Neovim plugin that facilitates quickly creating notes
+in Anki using the AnkiConnect plugin.
 
-It works by using a simple Markdown format, as follows:
+## Requirements
 
-```markdown
-# User
-
-Who was the 1st president of the United States?
-
-# Assistant
-
-George Washington
-
-# User
-```
-
-This makes it really easy to:
-
-1. Start chats
-1. Save/share chats
-1. Edit conversations in line
-1. Have multi-turn conversations
-
-Flyboy also supports configuring custom templates and data sources, so you can support prompts like the following:
-
-```markdown
-# User
-
-Write a unit test in Lua for the following code
-<Your code from visual selection here>
-```
-
-and automatically send them to ChatGPT for a response.
-
-## Installation
-
-1. Put your `OPENAI_API_KEY` as an environment variable
-
-```bash
-export OPENAI_API_KEY=""
-```
+1. Anki must be started, and you must install the 
+[AnkiConnect](https://ankiweb.net/shared/info/2055492159) plugin
 
 2. Have curl installed on your machine
 
-3. Install `plenary.nvim` and `flyboy.nvim` using your package manager:
+3. Install `plenary.nvim` and `neoanki` using your package manager:
 
 For example, using plug
 
 ```vim
 Plug 'nvim-lua/plenary.nvim'
-Plug 'CamdenClark/flyboy'
+Plug 'CamdenClark/neoanki'
 ```
 
-## Functions
+## Creating a cloze note
 
-These functions open a new chat window. Split opens in a horizontal split,
-while VSplit opens in a vertical split. They optionally take a
+Let's say you have the following sentence in a buffer:
 
-```vim
-:FlyboyOpen
-:FlyboyOpenSplit
-:FlyboyOpenVSplit
-
-" open a chat buffer with the current text selected in visual mode
-:FlyboyOpen visual
+```
+The Eiffel Tower is in the city of Paris
 ```
 
-These functions open a new chat window and automatically send the message to the
-assistant. Best used with a template.
+You can either manually add a cloze here, or you can select part of the 
+text in visual mode and call `:AnkiWrapCloze`:
 
-```vim
-" starts a chat session with the current text selected in visual mode
-:FlyboyStart visual
-:FlyboyStartSplit visual
-:FlyboyStartVSplit visual
+```
+The Eiffel Tower is in the city of {{c1::Paris}}
 ```
 
-Finally, at any time, you can send a message:
+Then, you can highlight the entire sentence in visual mode, and call `:AnkiCreateCloze`.
 
-```vim
-:FlyboySendMessage
+This will create a cloze note with that text.
+
+## Creating a basic note
+
+Let's say you have the following sentence in a buffer:
+
 ```
+Where is the Eiffel Tower?
+```
+
+You can highlight the entire sentence in visual mode, and call `:AnkiCreateBasic`.
+
+Neovim will prompt you for the back, where you can type in `Paris`.
+This will create a basic note with that Front and Back text.
+
+### Alternative basic note creation
+
+Alternatively you can create a basic note in one go by typing out this:
+
+```
+Where is the Eiffel Tower?
+===
+Paris
+```
+
+You can highlight all three lines in visual mode, and call `:AnkiCreateBasic`.
+This will skip the prompting step and allow you to directly create a note.
 
 ## Configuration
 
-You can configure custom sources and templates for your ChatGPT prompts.
+Here is how you configure options for neoanki. What's shown is the defaults:
 
 ```lua
-require('flyboy.config').setup({
-  sources = {
-    my_source = function () return "world" end
-  },
-  templates = {
-    my_template = {
-      template_fn = function(sources) return "# User\nHello, " .. sources.my_source() end
-      -- :FlyboyOpen my_template
-      -- Output:
-      -- # User
-      -- Hello, world
-    }
-  }
+require('anki.config').setup({
+  deckName = "Default",
+  anki_connect = { url = "http://localhost:8765", api_key = nil },
+  tags = {}
 })
 ```
 
-Sources are intended to be helpers to get common pieces of data that you'd be
-interested in to build your prompts to ChatGPT. Some sources are pre-created,
-including `visual`, which provides the text that's visually selected.
-
-Templates are how you construct prompts that will be sent to ChatGPT.
-
-### Visual selection
-
-A common thing you'd want to do is support adding something you've selected
-in visual mode to the contents of a prompt. Here's how you do that.
-
-```lua
-require('flyboy.config').setup({
-  templates = {
-    unit_test = {
-      template_fn = function(sources)
-          return "# User\n"
-            .. "Write a unit test for the following code:\n"
-            .. sources.visual()
-      end
-      -- :FlyboyStart unit_test
-      -- Output:
-      -- # User
-      -- Write a unit test for the following
-      -- <Your visual selection>
-    }
-  }
-})
-```
 
 ## Development
 
