@@ -1,22 +1,25 @@
-# neoanki
+# Neoanki
 
 Neoanki is a Neovim plugin that facilitates quickly creating notes
 in Anki using the AnkiConnect plugin.
 
-## Requirements
+Neoanki is focused around simple interactions inside any buffer, instead
+of just replicating the Anki form in a special buffer.
+
+## Requirements and Installation
 
 1. Anki must be started, and you must install the 
 [AnkiConnect](https://ankiweb.net/shared/info/2055492159) plugin
 
 2. Have curl installed on your machine
 
-3. Install `plenary.nvim` and `neoanki` using your package manager:
+3. Install `plenary.nvim` and `Neoanki` using your package manager:
 
 For example, using plug
 
 ```vim
 Plug 'nvim-lua/plenary.nvim'
-Plug 'CamdenClark/neoanki'
+Plug 'CamdenClark/Neoanki'
 ```
 
 ## Creating a cloze note
@@ -64,9 +67,16 @@ Paris
 You can highlight all three lines in visual mode, and call `:AnkiCreateBasic`.
 This will skip the prompting step and allow you to directly create a note.
 
+## Changing the deck or tags mid-session
+
+You can select the deck or tags that further calls to `:AnkiCreateBasic` and
+`:AnkiCreateCloze` will use.
+
+Call `:AnkiSelectDeck <deck-name>` or `:AnkiSelectTags <tag1> <tag2> ...`
+
 ## Configuration
 
-Here is how you configure options for neoanki. What's shown is the defaults:
+Here is how you configure options for Neoanki. What's shown is the defaults:
 
 ```lua
 require('anki.config').setup({

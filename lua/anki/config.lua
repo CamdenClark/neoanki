@@ -2,7 +2,6 @@ local M = {}
 
 local defaults = {
     deckName = "Default",
-    modelName = "Cloze",
     tags = {},
     anki_connect = { url = "http://localhost:8765", token = nil },
 }
@@ -15,10 +14,6 @@ end
 
 function M.select_deck(deckName)
     M.options.deckName = deckName
-end
-
-function M.select_note_type(modelName)
-    M.options.modelName = modelName
 end
 
 function M.select_tags(tags_string)

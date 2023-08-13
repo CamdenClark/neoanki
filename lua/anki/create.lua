@@ -1,6 +1,7 @@
 local anki = require('anki.anki')
 local config = require('anki.config')
 
+
 local function get_visual_selection()
     local start_pos = vim.fn.getpos("'<")
     local end_pos = vim.fn.getpos("'>")
