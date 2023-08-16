@@ -1,5 +1,6 @@
 command! -range=% -nargs=* AnkiCreateCloze lua require('anki.create').quick_create_cloze(<f-args>)
 command! -range=% -nargs=* AnkiCreateBasic lua require('anki.create').quick_create_basic(<f-args>)
+command! -range=% -nargs=* AnkiCreateBasicReverse lua require('anki.create').quick_create_basic_reverse(<f-args>)
 
 command! -range=% -nargs=* AnkiWrapCloze lua require('anki.create').wrap_cloze(<f-args>)
 

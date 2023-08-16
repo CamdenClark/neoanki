@@ -55,6 +55,27 @@ local function quick_create_basic()
         config.options.tags)
 end
 
+local function quick_create_basic_reverse()
+    local visual_selection = get_visual_selection()
+    local parts = {}
+    for part in visual_selection:gmatch("([^===]+)") do
+        table.insert(parts, part:match("^%s*(.-)%s*$"))
+    end
+    local front = parts[1] or ''
+    local back = parts[2] or ''
+
+    if back == '' then
+      back = vim.fn.input('Enter the back text: ')
+    end
+    local fields = { Front = front, Back = back }
+
+    anki.create_note(
+        config.options.deckName,
+        "Basic (and reversed card)",
+        fields,
+        config.options.tags)
+end
+
 local function wrap_cloze(number)
     if not (number) then
         number = "1"
@@ -71,5 +92,6 @@ end
 return {
     quick_create_cloze = quick_create_cloze,
     quick_create_basic = quick_create_basic,
+    quick_create_basic_reverse = quick_create_basic_reverse,
     wrap_cloze = wrap_cloze
 }

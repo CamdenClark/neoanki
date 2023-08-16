@@ -164,3 +164,69 @@ describe('create a basic card', function()
         assert.are.same(true, create_called)
     end)
 end)
+
+describe('create a basic and reverse card', function()
+    it('create a basic and reverse card with default deck', function()
+        config.setup()
+        local selected_lines = { "hello world", "example", "===", "some text", "more text here", "and here" }
+        vim.api.nvim_command('enew')
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, selected_lines)
+        -- luacheck: ignore
+        vim.fn.getpos = function(mark)
+            if (mark == "'<") then
+                return { 0, 2, 0 }
+            else
+                return { 0, 4, 10 }
+            end
+        end
+
+        local create_called = false
+
+        mock.new(anki, true)
+
+        anki.create_note = function(deckName, modelName, fields, tags)
+            assert.are.same("Default", deckName)
+            assert.are.same("Basic (and reversed card)", modelName)
+            assert.are.same({ Front = "example", Back = "some text" }, fields)
+            assert.are.same({}, tags)
+            create_called = true
+        end
+
+        -- Call the function to create a chat from the selection
+        create.quick_create_basic_reverse()
+        assert.are.same(true, create_called)
+    end)
+    it('create a basic card with default deck, prompting for back', function()
+        config.setup()
+        local selected_lines = { "hello world", "example", "===", "some text", "more text here", "and here" }
+        vim.api.nvim_command('enew')
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, selected_lines)
+        -- luacheck: ignore
+        vim.fn.getpos = function(mark)
+            if (mark == "'<") then
+                return { 0, 2, 0 }
+            else
+                return { 0, 2, 8 }
+            end
+        end
+
+        local create_called = false
+
+        mock.new(anki, true)
+
+        anki.create_note = function(deckName, modelName, fields, tags)
+            assert.are.same("Default", deckName)
+            assert.are.same("Basic (and reversed card)", modelName)
+            assert.are.same({ Front = "example", Back = "some text" }, fields)
+            assert.are.same({}, tags)
+            create_called = true
+        end
+
+        vim.fn.input = function(_)
+            return "some text"
+        end
+        create.quick_create_basic_reverse()
+
+        assert.are.same(true, create_called)
+    end)
+end)
